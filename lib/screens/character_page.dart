@@ -21,7 +21,9 @@ class _CharacterPageState extends State<CharacterPage> {
   @override
   void initState() {
     super.initState();
-    _future = ApiService._CharacterModel();
+    _future = ApiService.getBooks().then(
+      (maps) => maps.map((map) => CharacterModel.fromJson(map)).toList(),
+    );
   }
 
   Future<void> _logout() async {
