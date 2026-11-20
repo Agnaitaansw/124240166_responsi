@@ -1,29 +1,24 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
-import '../models/character_model.dart';
-import '../models/spell_model.dart';
-
 class ApiService {
-String apiUrl1 = 'https://potterapi-fedeperin.vercel.app/en/books';
-String apiUrl2 = 'https://potterapi-fedeperin.vercel.app/en/spells';
+  static const String _base = 'https://potterapi-fedeperin.vercel.app/en';
 
-  Future<List<CharacterModel>> fetchCharacters() async {
-    final response = await http.get(Uri.parse('$apiUrl1?index=1'));
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((e) => CharacterModel.fromJson(e)).toList();
-    }
-    throw Exception('Gagal memuat karakter (${response.statusCode})');
+  static Future<List<Map<String, dynamic>>> getBooks() async {
+    final res = await http.get(Uri.parse('$_base/books'));
+    if (res.statusCode != 200) throw Exception('Gagal memuat buku');
+    return List<Map<String, dynamic>>.from(jsonDecode(res.body));
   }
 
-  Future<List<SpellModel>> fetchSpells() async {
-    final response = await http.get(Uri.parse(apiUrl2));
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((e) => SpellModel.fromJson(e)).toList();
-    }
-    throw Exception('Gagal memuat spell (${response.statusCode})');
+  static Future<Map<String, dynamic>> getBookByIndex(int index) async {
+    final res = await http.get(Uri.parse('$_base/books?index=$index'));
+    if (res.statusCode != 200) throw Exception('Gagal memuat detail buku');
+    return Map<String, dynamic>.from(jsonDecode(res.body));
+  }
+
+  static Future<List<Map<String, dynamic>>> getSpells() async {
+    final res = await http.get(Uri.parse('$_base/spells'));
+    if (res.statusCode != 200) throw Exception('Gagal memuat mantra buku');
+    return List<Map<String, dynamic>>.from(jsonDecode(res.body));
   }
 }
