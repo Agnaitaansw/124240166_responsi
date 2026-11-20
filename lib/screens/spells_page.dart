@@ -21,7 +21,9 @@ class _SpellsPageState extends State<SpellsPage> {
   @override
   void initState() {
     super.initState();
-    _future = ApiService.SpellModel();
+    _future = ApiService.getSpells().then(
+      (maps) => maps.map((map) => SpellModel.fromJson(map)).toList(),
+    );
   }
 
   Future<void> _toggleFavorite(SpellModel spell) async {
